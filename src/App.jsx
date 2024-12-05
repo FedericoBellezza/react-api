@@ -9,7 +9,7 @@ function App() {
     fetch("http://localhost:3000/posts")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log(data.posts);
         setPosts(data.posts);
       });
   };
@@ -18,7 +18,7 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [title, setTitle] = useState("");
   const [img, setImg] = useState("");
-  const [tags, setTags] = useState("Casual");
+  const [tags, setTags] = useState(["Dietetico"]);
   const [isPublic, setIsPublic] = useState("true");
   const [content, setContent] = useState("");
   let newPosts = [...posts];
@@ -40,7 +40,7 @@ function App() {
     if (e.target.name === "title") setTitle(e.target.value);
     if (e.target.name === "img") setImg(e.target.value);
     if (e.target.name === "content") setContent(e.target.value);
-    if (e.target.name === "tags") setTags(e.target.value);
+    if (e.target.name === "tags") setTags([e.target.value]);
     if (e.target.name === "isPublic") setIsPublic(e.target.value);
   };
 
@@ -78,11 +78,12 @@ function App() {
   return (
     <div className="container">
       <Header />
-
+      <hr />
+      <h2>Aggiungi un post:</h2>
       <form
         onChange={handleFormChange}
         onSubmit={handleFormSubmit}
-        className="row g-3 input-group mt-5"
+        className="row g-3 input-group mt-2"
       >
         {/* Titolo */}
         <div className="col-6">
@@ -164,7 +165,7 @@ function App() {
                     <h5 className="card-title">{element.title}</h5>
                     <p className="card-text">{element.content}</p>
                     <div className="d-flex flex-row align-items-center  justify-content-between">
-                      <div className="d-flex ">
+                      <div className="d-flex">
                         {element.tags.map((tag) => {
                           return (
                             <div
