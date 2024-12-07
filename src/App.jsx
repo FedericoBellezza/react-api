@@ -27,6 +27,20 @@ function App() {
         console.log(data);
       });
   };
+
+  const fetchDeletePost = (data) => {
+    fetch(`http://localhost:3000/posts/${data}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
   const [posts, setPosts] = useState([]);
 
   const [inputValue, setInputValue] = useState("");
@@ -48,6 +62,8 @@ function App() {
 
       newPosts.splice(index, 1);
       setPosts(newPosts);
+
+      fetchDeletePost(element.id);
     }
   };
 
@@ -84,6 +100,7 @@ function App() {
     console.log("Aggiunto " + form.title);
     newPosts = [...posts, form];
     setPosts(newPosts);
+
     fetchCreatePost(form);
     setForm({
       title: "",
