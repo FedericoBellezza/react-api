@@ -21,6 +21,12 @@ function App() {
   const [tags, setTags] = useState(["Dietetico"]);
   const [isPublic, setIsPublic] = useState("true");
   const [content, setContent] = useState("");
+  const [form, setForm] = useState({
+    title: "",
+    content: "",
+    img: "",
+    tags: [""],
+  });
   let newPosts = [...posts];
 
   // - Funzione per eliminare un post
@@ -35,21 +41,29 @@ function App() {
     }
   };
 
-  // - Alla modifica dell'input
+  // - Alla modifica del form
   const handleFormChange = (e) => {
-    if (e.target.name === "title") setTitle(e.target.value);
-    if (e.target.name === "img") setImg(e.target.value);
-    if (e.target.name === "content") setContent(e.target.value);
-    if (e.target.name === "tags") setTags([e.target.value]);
-    if (e.target.name === "isPublic") setIsPublic(e.target.value);
+    let newForm = {
+      ...form,
+      [e.target.id]: e.target.value,
+    };
+    if (e.target.id === "tags") {
+      newForm = {
+        ...form,
+        [e.target.id]: [e.target.value],
+      };
+    }
+    setForm(newForm);
+    console.log(form);
   };
 
   // - All'invio del form
   const handleFormSubmit = (e) => {
     event.preventDefault();
-    if (!title) return;
-    if (!img) return;
-    if (!tags) return;
+    e.target.tags.value = 0;
+    if (!form.title) return;
+    if (!form.img) return;
+    if (!form.tags) return;
     setInputValue({
       title,
       img,
@@ -59,40 +73,30 @@ function App() {
     });
 
     console.log("Aggiunto il titolo: " + title);
-    newPosts = [
-      ...posts,
-      {
-        title,
-        img,
-        content,
-        tags,
-        isPublic,
-      },
-    ];
+    newPosts = [...posts, form];
     setPosts(newPosts);
     console.log(newPosts);
-    setTitle("");
-    setImg("");
-    setContent("");
+    setForm({
+      title: "",
+      content: "",
+      img: "",
+      tags: [""],
+    });
   };
   return (
     <div className="container">
       <Header />
       <hr />
-      <h2>Aggiungi un post:</h2>
-      <form
-        onChange={handleFormChange}
-        onSubmit={handleFormSubmit}
-        className="row g-3 input-group mt-2"
-      >
+      <h2>Aggiungi un post</h2>
+      <form onSubmit={handleFormSubmit} className="row g-3 input-group mt-2">
         {/* Titolo */}
         <div className="col-6">
           <input
             onChange={handleFormChange}
-            name="title"
+            id="title"
             type="text"
             className="form-title form-control"
-            value={title}
+            value={form.title}
             placeholder="Titolo"
           />
         </div>
@@ -100,10 +104,10 @@ function App() {
         <div className="col-6">
           <input
             onChange={handleFormChange}
-            name="img"
+            id="img"
             type="select"
             className="form-img form-control"
-            value={img}
+            value={form.img}
             placeholder="Immagine"
           />
         </div>
@@ -111,11 +115,14 @@ function App() {
         <div className="col-6">
           <select
             onChange={handleFormChange}
-            name="tags"
+            id="tags"
             className="form-category form-select"
             aria-label="Default select example"
           >
-            <option selected>Dietetico</option>
+            <option value={0} disabled selected>
+              Categoria
+            </option>
+            <option>Dietetico</option>
             <option>Vegano</option>
             <option>Vegetariano</option>
             <option>Senza glutine</option>
@@ -127,7 +134,7 @@ function App() {
         <div className="col-6">
           <select
             onChange={handleFormChange}
-            name="isPublic"
+            id="isPublic"
             className="form-ispublic form-select"
             aria-label="Default select example"
           >
@@ -140,9 +147,9 @@ function App() {
         <div className="col-12">
           <textarea
             onChange={handleFormChange}
-            name="content"
+            id="content"
             className="form-description  form-control textarea"
-            value={content}
+            value={form.content}
             placeholder="Descrizione"
           />
         </div>
