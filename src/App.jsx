@@ -13,14 +13,24 @@ function App() {
         setPosts(data.posts);
       });
   };
+
+  const fetchCreatePost = (data) => {
+    fetch(`http://localhost:3000/posts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
   const [posts, setPosts] = useState([]);
 
   const [inputValue, setInputValue] = useState("");
-  const [title, setTitle] = useState("");
-  const [img, setImg] = useState("");
-  const [tags, setTags] = useState(["Dietetico"]);
-  const [isPublic, setIsPublic] = useState("true");
-  const [content, setContent] = useState("");
+
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -54,7 +64,6 @@ function App() {
       };
     }
     setForm(newForm);
-    console.log(form);
   };
 
   // - All'invio del form
@@ -72,10 +81,10 @@ function App() {
       isPublic,
     });
 
-    console.log("Aggiunto il titolo: " + title);
+    console.log("Aggiunto " + form.title);
     newPosts = [...posts, form];
     setPosts(newPosts);
-    console.log(newPosts);
+    fetchCreatePost(form);
     setForm({
       title: "",
       content: "",
